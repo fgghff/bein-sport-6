@@ -1,114 +1,149 @@
 <!DOCTYPE html>
-<html lang="ar">
+<html lang="ar" dir="rtl">
 <head>
-  <meta charset="UTF-8">
-  <title>حمادة TV</title>
-   <link rel="icon" href="https://raw.githubusercontent.com/1ffu1/hamada-tv/refs/heads/main/logo.png">
-  <script src="https://content.jwplatform.com/libraries/Z79JsmAO.js"></script>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/showdown/1.7.1/showdown.min.js"></script>
-  <script src="//ajax.googleapis.com/ajax/libs/jquery/2.1.4/jquery.min.js"></script>
-  <script src="https://developer-tools.jwplayer.com/js/tools.min.js"></script>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
-  <style>
-    html, body { margin: 0; padding: 0; height: 100%; overflow: hidden; }
-    .jwplayer { position: relative; width: 100%; height: 100%; }
-    .jwplayer .jw-media video { width: 100%; height: 100%; object-fit: fill; }
-    /* إضافة تأثير ضبابي لخلفية مشغل JWPlayer */
-    .jw-controlbar.jw-reset , .jw-reset.jw-settings-menu , .resizeButton
-    {
-      background: #00000043; /* لون الخلفية المطلوب */
-      backdrop-filter: blur(10px); /* إضافة تأثير الضبابية */
-      -webkit-backdrop-filter: blur(10px); /* دعم للمستعرضات القديمة */
-    }
-    #resizeButton { position: absolute; top: 20px; left: 20px; background-color: rgba(0,0,0,0.4); color: white; border: none; padding: 10px 15px; font-size: 16px; cursor: pointer; border-radius: 5px; z-index: 9999; }
-    #resizeButton:hover { background-color: rgba(0,0,0,0.6); }
-  </style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>التقرير الأول: البوابات المنطقية - عبدالله احمد مطلك</title>
+    <style>
+        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background-color: #f4f7f6; color: #333; margin: 0; padding: 20px; line-height: 1.6; }
+        .report-page { max-width: 850px; margin: 30px auto; background: #fff; padding: 40px; border-radius: 8px; box-shadow: 0 4px 12px rgba(0,0,0,0.08); border-top: 6px solid #0056b3; page-break-after: always; }
+        .header { text-align: center; border-bottom: 2px dashed #0056b3; padding-bottom: 20px; margin-bottom: 30px; }
+        .header h1 { color: #0056b3; margin: 5px 0; font-size: 26px; }
+        .header h2 { color: #444; margin: 5px 0; font-size: 18px; }
+        .student-info { background: #f8f9fa; border-right: 5px solid #28a745; padding: 15px; margin: 20px 0; border-radius: 4px; display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+        .student-info div { font-size: 16px; }
+        .student-info strong { color: #0056b3; }
+        h3 { color: #0056b3; border-bottom: 2px solid #f0f0f0; padding-bottom: 8px; margin-top: 30px; }
+        p, li { font-size: 16px; color: #454545; text-align: justify; }
+        .page-number { text-align: center; font-weight: bold; margin-top: 40px; color: #777; border-top: 1px solid #eee; padding-top: 10px; }
+        .code-block { direction: ltr; text-align: left; background: #272822; color: #f8f8f2; padding: 15px; border-radius: 5px; font-family: monospace; overflow-x: auto; }
+        table { width: 100%; border-collapse: collapse; margin: 20px 0; direction: ltr; }
+        th, td { border: 1px solid #ddd; padding: 10px; text-align: center; }
+        th { background-color: #0056b3; color: white; }
+        tr:nth-child(even) { background-color: #f2f2f2; }
+    </style>
 </head>
 <body>
-  <button id="resizeButton" class="resizeButton">
-    <i class="fas fa-compress"></i>
-  </button>
-  <div id="my-jwplayer"></div>
-   
-  <script>
-    // استخراج الرابط من معلمات URL
-    const urlParams = new URLSearchParams(window.location.search);
-    const videoUrl = "https://todtv-live-spo-prod.akamaized.net/Content/Channel/svc-spo-hd-13-dt/DASH/playlist.mpd?hdnts=st=1742491536~exp=1742667936~acl=*/Content/Channel/svc-spo-hd-13-dt/DASH/*~id=9DJC2AMWXMT8~data=aXA9MTU2LjE3OC4zMi40Ng~hmac=c8d598b4dfe5c8876444756b8e4f7d7809282197c40ddfe4471af3b56720953836~acl=*/Content/Channel/svc-spo-hd-13-dt/DASH/*~id=9DJC2AMWXMT8~data=aXA9MTU2LjE3OC4zMi40Ng~hmac=c8d598b4dfe5c8876444756b8e4f7d7809282197c40ddfe4471af3b567209538"; // الحصول على قيمة videoUrl من URL
-    // إذا لم يتم تقديم رابط، يتم استخدام الرابط الذي قدمته
-    const defaultVideoUrl = "https://hamada-tv.com/none.mp4";
-    const finalVideoUrl = videoUrl || defaultVideoUrl; // استخدام الرابط من URL أو الرابط الافتراضي
-    // إعداد اللاعب باستخدام الرابط النهائي
-    var player = jwplayer("my-jwplayer").setup({
-      file: finalVideoUrl, // استخدام الرابط النهائي
-      width: "100%",
-      height: "100%",
-      repeat: true,
-      volume: 100,
-      autostart: true,
-      mute: false,
-      
-      drm: {
-        clearkey: {
-          keyId: "44570b198707332caab56924d253ee25",
-          key: "d95efbc6594ef573a269b912e33b7f72"
-        }
-      },
-      skin: {
-        name: "seven",
-        active: "#FFA000",
-        inactive: "#ffffffc9",
-        background: "#00000020"
-      }
-    });
-    // في حال حدوث خطأ أثناء التشغيل باستخدام clearkey، يتم إعادة تهيئة اللاعب باستخدام clearKeys
-    player.on('error', function(error) {
-      console.error("الطريقة الأولى فشلت (" + error.message + ")، سيتم استخدام طريقة clearKeys");
-      player.setTextTrackVisibility(true);
-      jwplayer("my-jwplayer").remove();
-      jwplayer("my-jwplayer").setup({
-        file: finalVideoUrl, // استخدام الرابط النهائي
-        repeat: true,
-        width: "100%",
-        height: "100%",
-        volume: 100,
-        autostart: true,
-        mute: false,
-        drm: {
-          clearKeys: {
-            "0a7934dddc3136a6922584b96c3fd1e5": "676e6d1dd00bfbe266003efaf0e3aa02"
-          }
-        },
-        skin: {
-          name: "seven",
-          active: "#FFA000",
-          inactive: "#7f8c8d",
-          background: "#00000020"
-        }
-      });
-    });
-    // ضبط خاصية object-fit للفيديو عند تحميل الصفحة
-    window.onload = function() {
-      const videoElement = document.querySelector('.jwplayer .jw-media video');
-      if (videoElement) {
-        videoElement.style.objectFit = 'fill';
-      }
-    };
-    // وظيفة تغيير حجم الفيديو عند الضغط على زر التكبير/التصغير
-    let isZoomed = false;
-    document.getElementById('resizeButton').addEventListener('click', function() {
-      const videoElement = document.querySelector('.jwplayer .jw-media video');
-      if (videoElement) {
-        if (!isZoomed) {
-          videoElement.style.objectFit = 'contain';
-          document.querySelector('#resizeButton i').className = 'fas fa-expand';
-        } else {
-          videoElement.style.objectFit = 'fill';
-          document.querySelector('#resizeButton i').className = 'fas fa-compress';
-        }
-        isZoomed = !isZoomed;
-      }
-    });
-  </script>
+
+    <div class="report-page">
+        <div class="header">
+            <h1>جامعة تكريت</h1>
+            <h2>كلية علوم الحاسوب والرياضيات</h2>
+            <h2>قسم الأمن السيبراني</h2>
+            <h2 style="margin-top: 15px; color: #2c3e50; font-weight: bold;">تقرير علمي بعنوان: البوابات المنطقية والجبر البولياني</h2>
+        </div>
+        
+        <div style="text-align: center; margin: 50px 0;">
+            <p style="font-size: 18px; font-weight: bold;">مقدم إلى كلية علوم الحاسوب والرياضيات كجزء من متطلبات مادة التصميم المنطقي</p>
+        </div>
+
+        <div class="student-info">
+            <div><strong>اسم الطالب:</strong> عبدالله احمد مطلك</div>
+            <div><strong>المرحلة:</strong> الأولى</div>
+            <div><strong>المادة:</strong> تصميم منطقي (Logic Design)</div>
+            <div><strong>نوع العمل:</strong> التقرير الأول</div>
+        </div>
+        <div class="page-number">صفحة 1</div>
+    </div>
+
+    <div class="report-page">
+        <h3>1. مقدمة في التصميم المنطقي والأنظمة الرقمية</h3>
+        <p>يعتمد التصميم المنطقي بشكل أساسي على الدوائر الرقمية التي تتعامل مع نظام العد الثنائي (Binary System)، حيث يتم تمثيل البيانات بحالتين فقط وهما (0 و 1). تعبر هذه القيم عن مستويات الجهد الكهربائي داخل الحاسوب؛ حيث يمثل الصفر غياب الجهد (Low Voltage) والواحد وجود الجهد (High Voltage).</p>
+        <p>تعتبر البوابات المنطقية (Logic Gates) حجر الأساس لبناء أي نظام رقمي أو معالج دقيق، ومن خلال دمج هذه البوابات معاً، يمكننا تصميم دوائر معقدة قادرة على معالجة البيانات، وتأمين الأنظمة، وتشفير المعلومات وهي المبادئ الأساسية التي يقوم عليها تخصص الأمن السيبراني لحماية البيانات على مستوى العتاد (Hardware Security).</p>
+        <div class="page-number">صفحة 2</div>
+    </div>
+
+    <div class="report-page">
+        <h3>2. البوابات المنطقية الأساسية (Basic Logic Gates)</h3>
+        <p>تنقسم البوابات المنطقية إلى بوابات أساسية لا يمكن الاستغناء عنها وهي:</p>
+        <ul>
+            <li><strong>بوابة الضرب المنطقي (AND Gate):</strong> لا تعطي مخرجاً يساوي (1) إلا إذا كانت جميع المدخلات تساوي (1).</li>
+            <li><strong>بوابة الجمع المنطقي (OR Gate):</strong> تعطي مخرجاً يساوي (1) إذا كان أحد المدخلات على الأقل يساوي (1).</li>
+            <li><strong>بوابة النفي (NOT Gate):</strong> وتسمى العاكس (Inverter)، حيث تقوم بعكس المدخل (إذا كان المدخل 1 يصبح المخرج 0 والعكس صحيح).</li>
+        </ul>
+
+        <h4 style="direction: ltr; text-align: left;">Truth Table for AND and OR Gates (2-Inputs):</h4>
+        <table>
+            <thead>
+                <tr>
+                    <th>Input A</th>
+                    <th>Input B</th>
+                    <th>AND (A · B)</th>
+                    <th>OR (A + B)</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr><td>0</td><td>0</td><td>0</td><td>0</td></tr>
+                <tr><td>0</td><td>1</td><td>0</td><td>1</td></tr>
+                <tr><td>1</td><td>0</td><td>0</td><td>1</td></tr>
+                <tr><td>1</td><td>1</td><td>1</td><td>1</td></tr>
+            </tbody>
+        </table>
+        <div class="page-number">صفحة 3</div>
+    </div>
+
+    <div class="report-page">
+        <h3>3. البوابات المنطقية المشتقة والشاملة (Universal Gates)</h3>
+        <p>تسمى بوابات مثل <strong>NAND</strong> و <strong>NOR</strong> بالبوابات الشاملة (Universal Gates) لأنه يمكن استخدام أي منها بمفردها لبناء أي دالة أو بوابة منطقية أخرى، مما يساهم في تقليل تكلفة تصنيع الرقاقات الإلكترونية.</p>
+        <ul>
+            <li><strong>بوابة NAND:</strong> هي عبارة عن بوابة AND متبوعة ببوابة NOT. معادلتها: Y = (A · B)'</li>
+            <li><strong>بوابة NOR:</strong> هي عبارة عن بوابة OR متبوعة ببوابة NOT. معادلتها: Y = (A + B)'</li>
+            <li><strong>بوابة XOR (Exclusive OR):</strong> تعطي مخرجاً (1) فقط عندما تكون المدخلات مختلفة.</li>
+        </ul>
+        <h4 style="direction: ltr; text-align: left;">Truth Table for NAND, NOR, and XOR:</h4>
+        <table>
+            <thead>
+                <tr>
+                    <th>A</th>
+                    <th>B</th>
+                    <th>NAND (A·B)'</th>
+                    <th>NOR (A+B)'</th>
+                    <th>XOR (A⊕B)</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr><td>0</td><td>0</td><td>1</td><td>1</td><td>0</td></tr>
+                <tr><td>0</td><td>1</td><td>1</td><td>0</td><td>1</td></tr>
+                <tr><td>1</td><td>0</td><td>1</td><td>0</td><td>1</td></tr>
+                <tr><td>1</td><td>1</td><td>0</td><td>0</td><td>0</td></tr>
+            </tbody>
+        </table>
+        <div class="page-number">صفحة 4</div>
+    </div>
+
+    <div class="report-page">
+        <h3>4. الجبر البولياني وقوانين التبسيط (Boolean Algebra)</h3>
+        <p>الجبر البولياني هو النظام الرياضي المستخدم لتحليل وتبسيط الدوائر المنطقية. الهدف من التبسيط هو تقليل عدد البوابات المستخدمة في الدائرة مما يؤدي إلى زيادة سرعة المعالجة وتقليل استهلاك الطاقة وتقليص المساحة على الرقاقة الإلكترونية.</p>
+        <p><strong>أهم قوانين الجبر البولياني:</strong></p>
+        <ul>
+            <li>قوانين الهوية (Identity Laws): A + 0 = A , A · 1 = A</li>
+            <li>قوانين المتمم (Complement Laws): A + A' = 1 , A · A' = 0</li>
+            <li>قوانين دي مورغان (De Morgan's Laws):
+                <br>1. (A · B)' = A' + B'
+                <br>2. (A + B)' = A' · B'
+            </li>
+        </ul>
+        <p><strong>مثال على التبسيط:</strong> تبسيط الدالة F = A·B + A·B'</p>
+        <div class="code-block">
+            F = A · (B + B')   [بأخذ عامل مشترك]
+            F = A · (1)        [B + B' = 1 حسب قانون المتمم]
+            F = A              [النتيجة النهائية]
+        </div>
+        <div class="page-number">صفحة 5</div>
+    </div>
+
+    <div class="report-page">
+        <h3>5. الخاتمة والمصادر</h3>
+        <p>نستنتج من هذا التقرير أن فهم البوابات المنطقية والجبر البولياني يمثل الخطوة الأولى والأساسية في فهم بنية الحاسوب الرقمي. إن القدرة على تبسيط الدوال المنطقية تتيح لمهندسي الأمن السيبراني ومصممي الأنظمة بناء عتاد صلب يتميز بالكفاءة العالية والسرعة والأمان، حيث تبدأ حماية البيانات من الدائرة المنطقية نفسها.</p>
+        
+        <h4 style="margin-top: 40px;">المصادر والمراجع (References):</h4>
+        <ol style="direction: ltr; text-align: left;">
+            <li>Digital Design (6th Edition) - M. Morris Mano and Michael D. Ciletti.</li>
+            <li>Principles of Digital Electronics - Fundamentals and Applications.</li>
+            <li>Lecture Notes on Logic Design - University of Tikrit, College of Computer Science and Mathematics.</li>
+        </ol>
+        <div class="page-number">صفحة 6</div>
+    </div>
+
 </body>
-</html> 
+                                                    </html>
